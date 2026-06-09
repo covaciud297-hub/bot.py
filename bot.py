@@ -1,11 +1,22 @@
+import os
+import discord
+from discord.ext import commands
+
+intents = discord.Intents.default()
+intents.message_content = True
+
+bot = commands.Bot(command_prefix="!", intents=intents)
+
+@bot.event
+async def on_ready():
+    print(f"Logged in as {bot.user}")
+
 @bot.event
 async def on_message(message):
     if message.author.bot:
         return
 
-    msg = message.content.lower().strip()
-
-    if msg == ".psc":
+    if message.content.lower() == ".psc":
         await message.channel.send(
             """💳 **You want to pay with Paysafe?**
 
@@ -17,7 +28,7 @@ https://www.paysafecard.com/en-gb/balance-check/
 After sending the codes via DM, please write **"have it"** in the ticket so we know you've sent them."""
         )
 
-    if msg == ".pp":
+    elif message.content.lower() == ".pp":
         await message.channel.send(
             """💰 **Paypal**
 
@@ -35,3 +46,5 @@ If not succeeded, please make a **#📬〢tickets**."""
         )
 
     await bot.process_commands(message)
+
+bot.run(os.getenv("DISCORD_TOKEN"))
